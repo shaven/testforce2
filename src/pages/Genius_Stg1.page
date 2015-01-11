@@ -1,0 +1,4 @@
+<apex:page >
+<iframe frameborder="0" width="100%" height="500" style="border: 1px solid #FFFFFF;" src="https://staging-sjc.gotgenie.com/Salesforce/geniusTab.php?uid={!$User.Id}&session={!$API.Session_ID}&server={!$API.Partner_Server_URL_180}&unique={!URLENCODE(TEXT(NOW()))}">
+</iframe>
+</apex:page>

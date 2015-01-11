@@ -1,0 +1,67 @@
+<apex:page title="Genius.com Chatter" sidebar="false" controller="genius_com.ChatterRefreshController">
+    <apex:variable var="BASE_ROOT" value="https://www.salesgenius.com" />
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/external/ext-3.2.0/resources/css/ext-all.css" />
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/reset-fonts-grids/reset-fonts-grids.css" />
+    <!-- Skin CSS files resize.css must load before layout.css -->
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/skins/sam/container.css"/>
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/skins/sam/resize.css"/>
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/skins/sam/layout.css"/>
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/skins/sam/logger.css"/>
+    <apex:stylesheet value="{!BASE_ROOT}/javascript/yui/custom/assets/skins/sam/button.css"/>
+
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/yahoo/yahoo-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/event/event-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/dom/dom-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/element/element-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/dragdrop/dragdrop-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/container/container-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/resize/resize-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/json/json-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/get/get-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/datasource/datasource-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/layout/layout-min.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/yahoo-dom-event/yahoo-dom-event.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/yui/build/logger/logger-min.js"/>
+    
+    <apex:stylesheet value="{!BASE_ROOT}/css/geniusTracker.css"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/sfTracker/v2/geniusApex.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/sfTracker/v2/record.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/sfTracker/v2/detailsArea.js"/>
+    <apex:includeScript value="{!BASE_ROOT}/javascript/sfTracker/v2/geniusChatter.js"/>
+    <div class="yui-skin-sam genius-chatterMain" style="height: 750px;">
+        <div id="genius-chatterContainer">
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <script src="/soap/ajax/19.0/connection.js" type="text/javascript"></script>
+    <script src="/soap/ajax/19.0/apex.js" type="text/javascript"></script>
+    <script>
+    YAHOO.util.Dom.addClass(document.body, "yui-skin-sam");
+    </script>
+    <script>
+    var GENIUS_chatter = new GENIUS_APEX.Chatter("GENIUS_chatter", {"session_id":"{!$Api.session_id}","url":"{!$Api.Partner_Server_URL_180}"}, {"user_id":"{!$User.Id}", "username":"{!$User.username}"}, "{!BASE_ROOT}",
+    {"targetElem": "{!$Component.hiddenDataForm.hiddenData}",
+     "onlyMine": "{!$Component.updateTriggerArea.mineOrAll}",
+     "onlyFollowed": "{!$Component.updateTriggerArea.onlyFollowing}",
+     "geniusScoreMin": "{!$Component.updateTriggerArea.geniusScoreMin}",
+     "geniusScoreMax": "{!$Component.updateTriggerArea.geniusScoreMax}",
+     "mostRecent": "{!$Component.updateTriggerArea.mostRecent}"});
+    </script>
+  <apex:form id="updateTriggerArea">
+    <apex:actionPoller rerender="chatterUpdateArea" oncomplete="GENIUS_chatter.handleRawRequestResponse(document.getElementById('{!$Component.hiddenDataForm.hiddenData}').value, true);" interval="10">
+    </apex:actionPoller>
+    <apex:actionFunction rerender="chatterUpdateArea" oncomplete="GENIUS_chatter.handleRawRequestResponse(document.getElementById('{!$Component.hiddenDataForm.hiddenData}').value, true);" name="forceChatterUpdate">
+      </apex:actionFunction>
+    <apex:inputHidden id="mineOrAll" value="{!OnlyMine}"/>
+      <apex:inputHidden id="onlyFollowing" value="{!OnlyFollowing}"/>
+      <apex:inputHidden id="geniusScoreMin" value="{!GeniusScoreMin}"/>
+      <apex:inputHidden id="geniusScoreMax" value="{!GeniusScoreMax}"/>
+      <apex:inputHidden id="mostRecent" value="{!MostRecent}"/>
+
+  </apex:form>
+  <apex:outputPanel id="chatterUpdateArea">
+    <apex:form id="hiddenDataForm">
+        <apex:inputHidden id="hiddenData" value="{!DataFunc}"/>
+    </apex:form>
+  </apex:outputPanel>
+</apex:page>

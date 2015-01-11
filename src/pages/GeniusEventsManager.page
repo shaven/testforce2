@@ -1,0 +1,80 @@
+<apex:page controller="GeniusEventsManagerController"  >
+
+<style>
+    .searchError { color: red; font-weight: strong;}
+</style>
+
+<apex:sectionHeader title="Genius Events" subtitle="Search"/>
+<apex:form id="solutionForm">
+    <apex:messages styleClass="searchError" />
+
+    <apex:outputLabel value="Search for:" style="font-weight: Bold;"/> &nbsp;&nbsp;
+    <apex:inputText id="searchText" value="{!searchText}" size="35"/>&nbsp;&nbsp;<br/>
+    <apex:outputLabel value="Does not Contain?" style="font-weight: Bold;"/> &nbsp;&nbsp;
+    <apex:inputCheckbox id="excludeText" value="{!IsExcludeText}"/><br/>
+    <apex:commandButton id="submitText" action="{!searchEvents}" title="Find Events" value="Find Events"/>            
+
+    <apex:outputPanel rendered="{!IF(DisplayList == true, true, false)}">
+    <apex:commandButton id="delete" action="{!deleteEvents}" title="Delete Displayed Events" value="Delete Searched Events"/>
+    <apex:pageBlock >
+    <apex:pageBlockSection collapsible="false" columns="1">
+         <apex:pageBlockSectionItem >
+             <apex:pageBlockTable value="{!listEvents}" var="thisEvent" id="theTable" >
+    
+                    <apex:column >
+                        
+                        <apex:facet name="header">Genius Event Name</apex:facet>
+                        <apex:outputLink target="_parent" value="/{!thisEvent.Id}">
+                            <apex:outputText value="{!thisEvent.Id}"/>
+                        </apex:outputLink>
+                        
+                    </apex:column>
+                    
+                     <apex:column >
+                        
+                        <apex:facet name="header">Name</apex:facet>
+                       
+                       <apex:outputLink target="_parent" value="/{!thisEvent.genius_com__RelatedToAccount__c}" rendered="{!IF(thisEvent.genius_com__RelatedToAccount__c != null, true, false)}">
+                            <apex:outputText value="{!thisEvent.genius_com__RelatedToAccount__r.name}"/>
+                        </apex:outputLink>
+                        
+                        <apex:outputLink target="_parent" value="/{!thisEvent.genius_com__RelatedToContact__c}" rendered="{!IF(thisEvent.genius_com__RelatedToContact__c != null, true, false)}">
+                            <apex:outputText value="{!thisEvent.genius_com__RelatedToContact__r.name}"/>
+                        </apex:outputLink>
+                        
+                         <apex:outputLink target="_parent" value="/{!thisEvent.genius_com__RelatedToLead__c}" rendered="{!IF(thisEvent.genius_com__RelatedToLead__c != null, true, false)}">
+                            <apex:outputText value="{!thisEvent.genius_com__RelatedToLead__r.Name}"/>
+                        </apex:outputLink> 
+                    </apex:column>
+                    
+                    <apex:column >
+                        
+                        <apex:facet name="header">Activity Name</apex:facet>
+                        <apex:outputText value="{!thisEvent.genius_com__ActivityName__c}" escape="false"/>
+     
+                       
+                    </apex:column>
+    
+                    <apex:column >
+
+                        <apex:facet name="header">Email Subject</apex:facet>
+
+                        <apex:outputText value="{!thisEvent.genius_com__EmailSubject__c}" escape="false"/>
+    
+                    </apex:column>
+                    
+                    <apex:column >
+
+                        <apex:facet name="header">Email Type</apex:facet>
+
+                        <apex:outputText value="{!thisEvent.genius_com__EmailType__c}"/>
+    
+                    </apex:column>
+                    
+             </apex:pageBlockTable>
+         </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:outputPanel>
+</apex:form>    
+</apex:page>
